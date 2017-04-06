@@ -1,0 +1,39 @@
+{
+  "name": "reactspotify",
+  "version": "1.0.0",
+  "description": "React api access POC with Webpack2, Typescript and React-Router",
+  "main": "index.js",
+  "scripts": {
+    "start": "node_modules/.bin/webpack-dev-server --open",
+    "test": "letstest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ReactSpotify"
+  },
+  "keywords": [
+    "React",
+    "api",
+    "access",
+    "POC",
+    "with",
+    "Webpack2",
+    "Typescript",
+    "and",
+    "React-Router"
+  ],
+  "author": "PrzemyslawKaminski",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^15.0.21",
+    "@types/react-dom": "^0.14.23",
+    "file-loader": "^0.11.1",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "source-map-loader": "^0.2.1",
+    "ts-loader": "^2.0.3",
+    "typescript": "^2.2.2",
+    "webpack": "^2.3.3",
+    "webpack-dev-server": "^2.4.2"
+  }
+}

@@ -37,8 +37,8 @@ export default class Scheduler extends React.Component<any, any> {
 
 
 
-        let taskList = new List<TodoItem>([new TodoItem('Task1', moment()), new TodoItem('Task2', moment())]);
-        let taskList2 = new List<TodoItem>([new TodoItem('Task3', moment()), new TodoItem('Task4', moment())]);
+        let taskList = new List<TodoItem>([new TodoItem('Task1', new Date()), new TodoItem('Task2',new Date())]);
+        let taskList2 = new List<TodoItem>([new TodoItem('Task3', new Date()), new TodoItem('Task4', new Date())]);
 
 
         let arr = new List<ScheduleName>();
@@ -88,8 +88,8 @@ export default class Scheduler extends React.Component<any, any> {
         this.setState({ availableLists: this.state.availableLists });
     }
 
-    addNewTask(task: string) {
-        this.state.currentList.value.Add(new TodoItem(task, moment()));
+    addNewTask(task: string, date: Date) {
+        this.state.currentList.value.Add(new TodoItem(task, date));
         this.setState({ currentList: this.state.currentList })
     }
 
@@ -115,7 +115,7 @@ export default class Scheduler extends React.Component<any, any> {
                 </div>
                 <TodoList name={this.state.currentList.label}
                     data={this.state.currentList.value.ToArray()}
-                    addItem={(value) => this.addNewTask(value)}
+                    addItem={(value, date) => this.addNewTask(value, date)}
                     style={{ marginTop: 100, width: 800 }} />
 
             </div>

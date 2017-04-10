@@ -1,8 +1,8 @@
 export class TodoItem {
     name: string;
-    expirationDate: object;
+    expirationDate: Date;
 
-    constructor(name: string, expirationDate: object){
+    constructor(name: string, expirationDate: Date){
         this.name = name;
         this.expirationDate = expirationDate;
     }

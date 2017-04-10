@@ -5,7 +5,7 @@ Trolololo
 #Sample code ?
 
 Installation:
-npm install
+npm `code` install  `back-ticks around`
 
 Running app
 npm start

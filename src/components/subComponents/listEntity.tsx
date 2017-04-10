@@ -1,14 +1,9 @@
-export class TodoList {
-    name: string;
-    todos: Array<TodoItem> = new Array<TodoItem>();
-}
-
-
-
 export class TodoItem {
     name: string;
+    expirationDate: object;
 
-    constructor(name: string){
+    constructor(name: string, expirationDate: object){
         this.name = name;
+        this.expirationDate = expirationDate;
     }
 }

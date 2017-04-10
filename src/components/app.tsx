@@ -3,7 +3,7 @@ import { Route, Link } from 'react-router';
 import * as Select from 'react-select';
 import { List } from 'linqts';
 import { TodoItem } from './subComponents/listEntity'
-
+import * as moment from 'moment';
 
 import 'react-select/dist/react-select.css';
 
@@ -37,8 +37,8 @@ export default class Scheduler extends React.Component<any, any> {
 
 
 
-        let taskList = new List<TodoItem>([new TodoItem('Task1'), new TodoItem('Task2')]);
-        let taskList2 = new List<TodoItem>([new TodoItem('Task3'), new TodoItem('Task4')]);
+        let taskList = new List<TodoItem>([new TodoItem('Task1', moment()), new TodoItem('Task2', moment())]);
+        let taskList2 = new List<TodoItem>([new TodoItem('Task3', moment()), new TodoItem('Task4', moment())]);
 
 
         let arr = new List<ScheduleName>();
@@ -89,7 +89,7 @@ export default class Scheduler extends React.Component<any, any> {
     }
 
     addNewTask(task: string) {
-        this.state.currentList.value.Add(new TodoItem(task));
+        this.state.currentList.value.Add(new TodoItem(task, moment()));
         this.setState({ currentList: this.state.currentList })
     }
 
@@ -114,7 +114,7 @@ export default class Scheduler extends React.Component<any, any> {
 
                 </div>
                 <TodoList name={this.state.currentList.label}
-                    data={this.state.currentList.value.Select(x => x.name).ToArray()}
+                    data={this.state.currentList.value.ToArray()}
                     addItem={(value) => this.addNewTask(value)}
                     style={{ marginTop: 100, width: 800 }} />
 

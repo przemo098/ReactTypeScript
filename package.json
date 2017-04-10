@@ -32,6 +32,7 @@
     "css-loader": "^0.28.0",
     "file-loader": "^0.11.1",
     "moment": "^2.18.1",
+    "rc-time-picker": "^2.3.3",
     "react-select": "^1.0.0-rc.3",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.16.1",

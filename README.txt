@@ -1,11 +1,5 @@
-I'm the owner no free code :P
-Trolololo
-
-
-#Sample code ?
-
 Installation:
-npm `code` install  `back-ticks around`
+    npm install
 
 Running app
-npm start
+    npm start

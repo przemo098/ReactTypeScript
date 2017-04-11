@@ -2,13 +2,29 @@ import * as React from 'react';
 import { TodoItem } from './listEntity'
 import { List } from 'linqts';
 import * as moment from 'moment';
-import 'react-datepicker/dist/react-datepicker.css';
 import 'react-datetime/css/react-datetime.css';
-import 'rc-time-picker/assets/index.css';
 import * as Datetime from 'react-datetime';
 import * as ReactDOM from 'react-dom';
+import Task from './task';
 
-export default class TodoListComponent extends React.Component<any, any> {
+interface ITodoListComponenProps {
+    data: List<TodoItem>;
+    name: string;
+    addItem(task: string, date: Date): void;
+    onDelete(item: TodoItem);
+    onTaskClick(isActive: TodoItem);
+    onPriorityChange(task: TodoItem, priority: number): void;
+    style: any;
+}
+
+interface ITodoListComponenState {
+    newTask: string;
+    tasks: List<TodoItem>;
+    selectedDateTime: Date;
+}
+
+
+export default class TodoListComponent extends React.Component<ITodoListComponenProps, ITodoListComponenState> {
     constructor(props: any) {
         super(props);
 
@@ -17,14 +33,9 @@ export default class TodoListComponent extends React.Component<any, any> {
         this.handleDateChange = this.handleDateChange.bind(this);
         this.handleTimeChange = this.handleTimeChange.bind(this);
 
+        this.taskExpiration(this.props.data.First().expirationDate);
 
-        let mockList1 = new List<TodoItem>();
-        mockList1.Add(new TodoItem("Todo1", new Date()));
-        mockList1.Add(new TodoItem("Hit the gym", new Date()));
-        mockList1.Add(new TodoItem("Meet George", new Date()));
-        mockList1.Add(new TodoItem("Organize office", new Date()));
-
-        this.state = { newTask: "Sample task", tasks: mockList1, selectedDateTime: new Date() }
+        this.state = { newTask: "Sample task", tasks: this.props.data, selectedDateTime: new Date() }
     }
 
     addButton: any;
@@ -34,8 +45,8 @@ export default class TodoListComponent extends React.Component<any, any> {
         this.props.addItem(this.state.newTask, this.state.selectedDateTime);
     }
 
-    handleDateChange(newDate: any) {
-        this.setState({ date: newDate })
+    handleDateChange(newDate: Date) {
+        this.setState({ selectedDateTime: newDate })
     }
 
     handleTimeChange(newTime: any) {
@@ -46,7 +57,36 @@ export default class TodoListComponent extends React.Component<any, any> {
         this.setState({ selectedDateTime: date });
     }
 
+    renderTask(key: number, value: TodoItem) {
+        return <li key={key}>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div>{value.name}</div>
+                <div style={{ margin: 'auto' }}>Expiration date:{moment(value.expirationDate).format('MM-dd-YY h:mm A').toString()}</div>
+                <button className="glyphicon glyphicon-remove" style={{ marginLeft: 'auto' }}></button>
+            </div>
+        </li>
+    }
+
+    taskExpiration(date: Date): number {
+        return moment(date).diff(moment(), 'days' as any);
+    }
+
     render() {
+
+
+        let TooLate = <div />;
+
+        if (this.props.data.Where(x => this.taskExpiration(x.expirationDate) < 0).Any()) {
+            TooLate = <div>Too late..<ul id="myUL">
+                {this.props.data.Where(x => this.taskExpiration(x.expirationDate) < 0).ToArray().map((item: TodoItem, index: number) =>
+                    <Task value={item} key={index}
+                        onTaskClick={(task: TodoItem) => this.props.onTaskClick(task)}
+                        onDeletion={(task: TodoItem) => this.props.onDelete(task)}
+                        updatePriority={(task: TodoItem, priority: number) => this.props.onPriorityChange(task, priority)}
+                        onActivationChage={(item: TodoItem) => this.props.onTaskClick(item)} />)}
+            </ul> </div>
+        }
+
         return (
             <div style={this.props.style}>
                 <div id="myDIV" className="header">
@@ -64,9 +104,18 @@ export default class TodoListComponent extends React.Component<any, any> {
                         <div onClick={() => this.newElement()} className="addBtn">Add new task</div>
                     </div>
                 </div>
-                <ul id="myUL">
-                    {this.props.data.map((item: TodoItem, index: number) => <li key={index}>{item.name} {moment(item.expirationDate).format('MM-dd-YY h:mm A').toString()} </li>)}
-                </ul>
+                {TooLate}                
+                <div>
+                    Todo:
+                    <ul id="myUL">
+                        {this.props.data.Where(x => this.taskExpiration(x.expirationDate) >= 0).ToArray().map((item: TodoItem, index: number) =>
+                            <Task value={item} key={index}
+                                onTaskClick={(task: TodoItem) => this.props.onTaskClick(task)}
+                                onDeletion={(task: TodoItem) => this.props.onDelete(task)}
+                                updatePriority={(task: TodoItem, priority: number) => this.props.onPriorityChange(task, priority)}
+                                onActivationChage={(item: TodoItem) => this.props.onTaskClick(item)} />)}
+                    </ul>
+                </div>
             </div>)
     }
 }

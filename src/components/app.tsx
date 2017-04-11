@@ -26,7 +26,15 @@ class ScheduleName implements IListValue {
     label: string;
 }
 
-export default class Scheduler extends React.Component<any, any> {
+interface SchedulerState {
+    availableLists: List<ScheduleName>,
+    currentList: ScheduleName,
+    addNewListClass: string,
+    searchItem: string,
+    newTask: string
+}
+
+export default class Scheduler extends React.Component<any, SchedulerState> {
 
     constructor(props: any) {
         super(props)
@@ -37,7 +45,7 @@ export default class Scheduler extends React.Component<any, any> {
 
 
 
-        let taskList = new List<TodoItem>([new TodoItem('Task1', new Date()), new TodoItem('Task2',new Date())]);
+        let taskList = new List<TodoItem>([new TodoItem('Task1', new Date()), new TodoItem('Task2', new Date())]);
         let taskList2 = new List<TodoItem>([new TodoItem('Task3', new Date()), new TodoItem('Task4', new Date())]);
 
 
@@ -49,7 +57,8 @@ export default class Scheduler extends React.Component<any, any> {
 
 
         this.state = {
-            availableLists: arr, currentList: arr.First(), addNewListClass: "btn btn-primary disabled", searchItem: ''
+            availableLists: arr, currentList: arr.First(), addNewListClass: "btn btn-primary disabled", searchItem: '',
+            newTask: ""
         }
     }
 
@@ -58,7 +67,7 @@ export default class Scheduler extends React.Component<any, any> {
     }
 
     updateCurrentListName(event: React.ChangeEvent<HTMLInputElement>) {
-        this.state.currentList.name = event.target.value
+        this.state.currentList.label = event.target.value
         this.setState({ currentList: this.state.currentList })
     }
 
@@ -71,6 +80,7 @@ export default class Scheduler extends React.Component<any, any> {
         this.setState({
             currentList: newValue
         })
+        console.log(this.state.currentList);
     };
 
     newValue(value: string) {
@@ -93,19 +103,39 @@ export default class Scheduler extends React.Component<any, any> {
         this.setState({ currentList: this.state.currentList })
     }
 
+    deleteItem(item: TodoItem) {
+        console.log(item);
+        this.state.currentList.value.Remove(item);
+        this.setState({ currentList: this.state.currentList })
+    }
+
+    taskClick(item: TodoItem) {
+        console.log(item);
+        console.log(this.state.currentList.value.Where(x => x === item).ToArray());
+        console.log(this.state.currentList.value.ToArray());
+        if (item.isDone === true) {
+            this.state.currentList.value.Where(x => x === item).First().isDone = false
+        } else {
+            this.state.currentList.value.Where(x => x === item).First().isDone = true
+        }
+        this.setState({ currentList: this.state.currentList })
+    }
+
+    updatePriority(task: TodoItem, value: number) {
+        task.priority = value;
+        this.setState({ currentList: this.state.currentList })
+        console.log(value);
+    }
 
     render() {
-
-        console.log(this.state.availableLists.ToArray());
-        // this.state.currentList.todos.map((item: any) => console.log(item))
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', marginTop: 50 }}>
                     <div style={{ width: 400 }}>
                         <Select
                             name="form-field-name"
-                            value={this.state.currentList}
-                            options={this.state.availableLists.ToArray()}
+                            value={this.state.currentList as any}
+                            options={this.state.availableLists.ToArray() as any}
                             onInputChange={this.newValue}
                             onChange={this.updateValue}
                         />
@@ -114,7 +144,10 @@ export default class Scheduler extends React.Component<any, any> {
 
                 </div>
                 <TodoList name={this.state.currentList.label}
-                    data={this.state.currentList.value.ToArray()}
+                    onPriorityChange={(task: TodoItem, priority: number) => this.updatePriority(task, priority)}
+                    onTaskClick={(item: TodoItem) => this.taskClick(item)}
+                    data={this.state.currentList.value.OrderBy(x => x.priority).OrderByDescending(x => x.priority)}
+                    onDelete={(item) => this.deleteItem(item)}
                     addItem={(value, date) => this.addNewTask(value, date)}
                     style={{ marginTop: 100, width: 800 }} />
 

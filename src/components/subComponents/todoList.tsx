@@ -72,8 +72,6 @@ export default class TodoListComponent extends React.Component<ITodoListComponen
     }
 
     render() {
-
-
         let TooLate = <div />;
 
         if (this.props.data.Where(x => this.taskExpiration(x.expirationDate) < 0).Any()) {
@@ -104,7 +102,7 @@ export default class TodoListComponent extends React.Component<ITodoListComponen
                         <div onClick={() => this.newElement()} className="addBtn">Add new task</div>
                     </div>
                 </div>
-                {TooLate}                
+                {TooLate}
                 <div>
                     Todo:
                     <ul id="myUL">

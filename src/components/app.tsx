@@ -45,8 +45,8 @@ export default class Scheduler extends React.Component<any, SchedulerState> {
 
 
 
-        let taskList = new List<TodoItem>([new TodoItem('Task1', new Date()), new TodoItem('Task2', new Date())]);
-        let taskList2 = new List<TodoItem>([new TodoItem('Task3', new Date()), new TodoItem('Task4', new Date())]);
+        let taskList = new List<TodoItem>([new TodoItem('Task1', new Date("October 13, 2014 11:13:00")), new TodoItem('Task2', new Date("October 13, 2018 11:13:00"))]);
+        let taskList2 = new List<TodoItem>([new TodoItem('Task3', new Date()), new TodoItem('Task4', new Date("October 13, 2014 11:13:00"))]);
 
 
         let arr = new List<ScheduleName>();

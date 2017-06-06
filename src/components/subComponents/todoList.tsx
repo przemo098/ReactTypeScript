@@ -38,6 +38,53 @@ export default class TodoListComponent extends React.Component<ITodoListComponen
         this.state = { newTask: "Sample task", tasks: this.props.data, selectedDateTime: new Date() }
     }
 
+
+    render() {
+        let TooLate = <div />;
+
+        if (this.props.data.Where(x => this.taskExpiration(x.expirationDate) < 0).Any()) {
+            TooLate = <div>
+                <div>Too late..</div>
+
+                <ul id="myUL" style={{padding: 0}}>
+                    {this.props.data.Where(x => this.taskExpiration(x.expirationDate) < 0).ToArray().map((item: TodoItem, index: number) =>
+                        <Task value={item} key={index}
+                            onTaskClick={(task: TodoItem) => this.props.onTaskClick(task)}
+                            onDeletion={(task: TodoItem) => this.props.onDelete(task)}
+                            updatePriority={(task: TodoItem, priority: number) => this.props.onPriorityChange(task, priority)}
+                            onActivationChage={(item: TodoItem) => this.props.onTaskClick(item)} />)}
+                </ul>
+            </div>
+        }
+
+        return (
+            <div style={this.props.style}>
+                <div id="myDIV" className="header">
+
+                    <h2>{this.props.name}</h2>
+                    <input style={{ color: 'black' }} value={this.state.newTask} type="text" id="myInput" placeholder="Title..."
+                        onChange={event => this.setState({ newTask: event.target.value })} />
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <Datetime value={this.state.selectedDateTime} onChange={this.updateDateTime} />
+                        <button onClick={() => this.newElement()} className="btn">Add new task</button>
+                    </div>
+                </div>
+                {TooLate}
+                <div>
+                    Todo:
+                    <ul className="list-group" id="myUL">
+                        {this.props.data.Where(x => this.taskExpiration(x.expirationDate) >= 0).ToArray().map((item: TodoItem, index: number) =>
+                            <Task value={item} key={index}
+                                onTaskClick={(task: TodoItem) => this.props.onTaskClick(task)}
+                                onDeletion={(task: TodoItem) => this.props.onDelete(task)}
+                                updatePriority={(task: TodoItem, priority: number) => this.props.onPriorityChange(task, priority)}
+                                onActivationChage={(item: TodoItem) => this.props.onTaskClick(item)} />)}
+                    </ul>
+                </div>
+            </div>)
+    }
+
+
     addButton: any;
 
     newElement() {
@@ -69,51 +116,5 @@ export default class TodoListComponent extends React.Component<ITodoListComponen
 
     taskExpiration(date: Date): number {
         return moment(date).diff(moment(), 'days' as any);
-    }
-
-    render() {
-        let TooLate = <div />;
-
-        if (this.props.data.Where(x => this.taskExpiration(x.expirationDate) < 0).Any()) {
-            TooLate = <div>Too late..<ul id="myUL">
-                {this.props.data.Where(x => this.taskExpiration(x.expirationDate) < 0).ToArray().map((item: TodoItem, index: number) =>
-                    <Task value={item} key={index}
-                        onTaskClick={(task: TodoItem) => this.props.onTaskClick(task)}
-                        onDeletion={(task: TodoItem) => this.props.onDelete(task)}
-                        updatePriority={(task: TodoItem, priority: number) => this.props.onPriorityChange(task, priority)}
-                        onActivationChage={(item: TodoItem) => this.props.onTaskClick(item)} />)}
-            </ul> </div>
-        }
-
-        return (
-            <div style={this.props.style}>
-                <div id="myDIV" className="header">
-
-                    <h2>{this.props.name}</h2>
-                    <input style={{ color: 'black' }} value={this.state.newTask} type="text" id="myInput" placeholder="Title..."
-                        onChange={event => this.setState({ newTask: event.target.value })} />
-
-
-                    <div></div>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-
-                        <Datetime value={this.state.selectedDateTime} onChange={this.updateDateTime} />
-
-                        <div onClick={() => this.newElement()} className="addBtn">Add new task</div>
-                    </div>
-                </div>
-                {TooLate}
-                <div>
-                    Todo:
-                    <ul id="myUL">
-                        {this.props.data.Where(x => this.taskExpiration(x.expirationDate) >= 0).ToArray().map((item: TodoItem, index: number) =>
-                            <Task value={item} key={index}
-                                onTaskClick={(task: TodoItem) => this.props.onTaskClick(task)}
-                                onDeletion={(task: TodoItem) => this.props.onDelete(task)}
-                                updatePriority={(task: TodoItem, priority: number) => this.props.onPriorityChange(task, priority)}
-                                onActivationChage={(item: TodoItem) => this.props.onTaskClick(item)} />)}
-                    </ul>
-                </div>
-            </div>)
     }
 }

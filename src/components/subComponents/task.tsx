@@ -25,34 +25,21 @@ export default class Task extends React.Component<TaskProps, TaskState> {
         this.props.onDeletion(this.props.value);
     }
 
+
+
+
     render() {
 
-        if (this.props.value.isDone === false) {
-            this.state = { taskStyle: activeUnactive.Active };
-        } else {
-            this.state = { taskStyle: activeUnactive.Unactive };
-        }
-
-
-
-        let borderStyle: any = {};
-
         let days = moment(this.props.value.expirationDate).diff(moment(), 'days' as any);
-        if (days < 1) {
-            borderStyle = {color: 'red'};
-        }
-
-
+        let strikeTrough = this.props.value.isDone == true ? "striketrough" : "";
+        let reminderColor: string = this.getColor(this.props.value.expirationDate);
 
         return (
-            <li style= {borderStyle} className={this.state.taskStyle}>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <button onClick={() => this.props.onTaskClick(this.props.value)}
-                        style={{ display: 'flex', flexDirection: 'row', margin: 'auto' }}>
-                        <div>{this.props.value.name}</div>
-                        <div style={{ marginLeft: 'auto' }}>Expiration date: {moment(this.props.value.expirationDate).format('MM-DD-YY h:mm A').toString()}</div>
-
-                    </button>
+            <li style={{ padding: 0, color: reminderColor }} className="list-group-item">
+                <div className={strikeTrough} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <input type="checkbox" checked={this.props.value.isDone} onClick={() => this.props.onTaskClick(this.props.value)} />
+                    <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>{this.props.value.name}</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>Expiration date: {moment(this.props.value.expirationDate).format('MM-DD-YY h:mm A').toString()}</div>
                     <div>
                         Priority: <input type="number" min="1" max="100" value={this.props.value.priority}
                             onChange={(value) => this.props.updatePriority(this.props.value, Number(value.target.value))} />
@@ -64,4 +51,21 @@ export default class Task extends React.Component<TaskProps, TaskState> {
             </li>
         )
     }
+
+    getColor(expirationDate: Date): string {
+        let targetDate = moment(expirationDate);
+        let now = moment();
+        let differenceInDays = (now.diff(targetDate, 'days'));
+
+        if (differenceInDays < 1) {
+            return "red"
+        }
+        return "";
+    }
+
+    add(x: number, y: number): number {
+        return x + y;
+    }
+
+
 }

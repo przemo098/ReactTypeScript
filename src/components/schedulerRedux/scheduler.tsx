@@ -1,34 +1,36 @@
 import * as React from 'react';
+
 import { connect } from 'react-redux';
+import * as Select from 'react-select';
+import AppState from '../../state';
+import { Schedule } from '../../model/schedule';
+import list from './list';
 
+interface Isample extends React.Props<any> {
+    lol: number;
+}
 
-class Scheduler extends React.Component<any, any> {
-    
-    
+class Scheduler extends React.Component<AppState, any> {
+
+    options = this.props.scheduler.schedules.map((x) => { return { value: x as any, label: x.name } });
     render() {
-        console.log(this.props);
         return (
             <div>
-                <p>
-                    <label>Counter: </label>
-                    <b>#{this.props.counter}</b>
-                </p>
-                <button onClick={e => this.props.incr() }>INCREMENT</button>
-                <span style={{ padding: "0 5px" }} />
-                <button onClick={e => this.props.decr() }>DECREMENT</button>
+                <div className="dropdown">
+                    <button className="dropbtn">Dropdown</button>
+                    {list(mapDispatchToProps)}
+
+                </div>
             </div>
         );
     }
 }
 
-const mapStateToProps = (state) => state;
+const mapStateToProps = (state: AppState) => state;
 
 const mapDispatchToProps = (dispatch) => ({
-    incr: () => {
-        dispatch({ type: 'INCR', by: 1 });
-    },
-    decr: () => {
-        dispatch({ type: 'INCR', by: -1 });
+    changeSelected: (newValue: Schedule) => {
+        dispatch({ type: 'CHANGE_SELECTED', value: newValue });
     }
 });
 

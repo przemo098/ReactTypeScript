@@ -1,6 +1,7 @@
 export class Schedule {
     todo: Todo[];
     selected: Todo;
+    name: string;
 }
 
 export class Todo {

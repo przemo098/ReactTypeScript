@@ -3,9 +3,13 @@ import {Schedule} from './model/schedule';
 export default class AppState {
     constructor(){
         this.counter = 0;
-        this.schedules = new Array<Schedule>();
-        
     }
-    schedules: Schedule[];
+    scheduler: Scheduler;
     counter: number;
+}
+
+
+export class Scheduler {
+    schedules: Schedule[];
+    selected: Schedule;
 }

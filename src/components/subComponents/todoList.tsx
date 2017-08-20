@@ -65,7 +65,7 @@ export default class TodoListComponent extends React.Component<ITodoListComponen
                     <input style={{ color: 'black' }} value={this.state.newTask} type="text" id="myInput" placeholder="Title..."
                         onChange={event => this.setState({ newTask: event.target.value })} />
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <Datetime value={this.state.selectedDateTime} onChange={this.updateDateTime} />
+                        <Datetime value={this.state.selectedDateTime as any} onChange={this.updateDateTime as any} />
                         <button onClick={() => this.newElement()} className="btn">Add new task</button>
                     </div>
                 </div>

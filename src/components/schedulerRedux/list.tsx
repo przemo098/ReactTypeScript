@@ -35,5 +35,5 @@ const mapDispatchToProps = (dispatch) => ({
     }
 });
 
-const item = connect(mapStateToProps, mapDispatchToProps)(List)
+const item = connect(mapStateToProps, mapDispatchToProps)(List as any)
 export default item;

@@ -18,7 +18,7 @@ class Scheduler extends React.Component<AppState, any> {
             <div>
                 <div className="dropdown">
                     <button className="dropbtn">Dropdown</button>
-                    {list(mapDispatchToProps)}
+                    {new list(mapDispatchToProps)}
 
                 </div>
             </div>
@@ -34,4 +34,4 @@ const mapDispatchToProps = (dispatch) => ({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Scheduler);
+export default connect(mapStateToProps, mapDispatchToProps)(Scheduler as any);
